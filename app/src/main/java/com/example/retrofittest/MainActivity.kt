@@ -2,6 +2,7 @@ package com.example.retrofittest
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.widget.SearchView.OnQueryTextListener
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.retrofittest.adapter.ProductAdapter
 import com.example.retrofittest.databinding.ActivityMainBinding
@@ -50,14 +51,24 @@ class MainActivity : AppCompatActivity() {
 
         val repository = retrofit.create(Repository::class.java)
 
-
-        CoroutineScope(Dispatchers.IO).launch {
-            val list = repository.getAllProduct()
-            runOnUiThread {
-                binding.apply {
-                    adapter.submitList(list.products)
-                }
+        binding.sv.setOnQueryTextListener(object : OnQueryTextListener {
+            override fun onQueryTextSubmit(query: String?): Boolean {
+                return true
             }
-        }
+
+            override fun onQueryTextChange(newText: String?): Boolean {
+                CoroutineScope(Dispatchers.IO).launch {
+                    val list = newText?.let { repository.getProductByName(it) }
+                    runOnUiThread {
+                        binding.apply {
+                            adapter.submitList(list?.products)
+                        }
+                    }
+                }
+                return true
+            }
+
+        })
+
     }
 }

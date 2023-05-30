@@ -4,6 +4,7 @@ import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.POST
 import retrofit2.http.Path
+import retrofit2.http.Query
 
 interface Repository {
     @GET("product/{id}")
@@ -14,4 +15,7 @@ interface Repository {
 
     @GET("product")
     suspend fun getAllProduct(): Products
+
+    @GET("product/search")
+    suspend fun getProductByName(@Query("q") name: String): Products
 }
