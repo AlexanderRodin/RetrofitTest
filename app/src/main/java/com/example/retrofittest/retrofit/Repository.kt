@@ -11,4 +11,7 @@ interface Repository {
 
     @POST("auth/login")
     suspend fun oAuth(@Body authRequest: AuthRequest): User
+
+    @GET("product")
+    suspend fun getAllProduct(): Products
 }

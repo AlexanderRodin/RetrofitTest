@@ -2,6 +2,8 @@ package com.example.retrofittest
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.retrofittest.adapter.ProductAdapter
 import com.example.retrofittest.databinding.ActivityMainBinding
 import com.example.retrofittest.retrofit.AuthRequest
 import com.example.retrofittest.retrofit.Repository
@@ -20,9 +22,19 @@ class MainActivity : AppCompatActivity() {
         ActivityMainBinding.inflate(layoutInflater)
     }
 
+    private val adapter by lazy {
+        ProductAdapter()
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
+
+
+//        TODO RcView
+        binding.rcView.layoutManager = LinearLayoutManager(this)
+        binding.rcView.adapter = adapter
+
 
         val interceptor = HttpLoggingInterceptor()
         interceptor.level = HttpLoggingInterceptor.Level.BODY
@@ -38,23 +50,14 @@ class MainActivity : AppCompatActivity() {
 
         val repository = retrofit.create(Repository::class.java)
 
-        binding.btnIn.setOnClickListener {
-            CoroutineScope(Dispatchers.IO).launch {
-                val user = repository.oAuth(
-                    AuthRequest(
-                        binding.userName.text.toString(),
-                        binding.password.text.toString()
-                    )
-                )
-                runOnUiThread {
-                    binding.apply {
-                        Picasso.get().load(user.image).into(iv)
-                        firstName.text = user.firstName
-                        lastName.text = user.lastName
-                    }
+
+        CoroutineScope(Dispatchers.IO).launch {
+            val list = repository.getAllProduct()
+            runOnUiThread {
+                binding.apply {
+                    adapter.submitList(list.products)
                 }
             }
         }
-
     }
 }
