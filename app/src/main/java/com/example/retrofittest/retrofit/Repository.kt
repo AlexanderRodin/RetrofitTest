@@ -2,6 +2,8 @@ package com.example.retrofittest.retrofit
 
 import retrofit2.http.Body
 import retrofit2.http.GET
+import retrofit2.http.Header
+import retrofit2.http.Headers
 import retrofit2.http.POST
 import retrofit2.http.Path
 import retrofit2.http.Query
@@ -16,6 +18,7 @@ interface Repository {
     @GET("product")
     suspend fun getAllProduct(): Products
 
-    @GET("product/search")
-    suspend fun getProductByName(@Query("q") name: String): Products
+    @Headers("Content-Type: application/json")
+    @GET("auth/product/search")
+    suspend fun getProductByName(@Header("Authorization") token: String, @Query("q") name: String): Products
 }

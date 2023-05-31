@@ -8,6 +8,7 @@ import com.example.retrofittest.adapter.ProductAdapter
 import com.example.retrofittest.databinding.ActivityMainBinding
 import com.example.retrofittest.retrofit.AuthRequest
 import com.example.retrofittest.retrofit.Repository
+import com.example.retrofittest.retrofit.User
 import com.squareup.picasso.Picasso
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -51,6 +52,19 @@ class MainActivity : AppCompatActivity() {
 
         val repository = retrofit.create(Repository::class.java)
 
+
+        var user: User? = null
+
+        CoroutineScope(Dispatchers.IO).launch {
+            user = repository.oAuth(
+                AuthRequest(
+                    "atuny0",
+                    "9uQFF1Lh"
+                )
+            )
+        }
+
+
         binding.sv.setOnQueryTextListener(object : OnQueryTextListener {
             override fun onQueryTextSubmit(query: String?): Boolean {
                 return true
@@ -58,7 +72,7 @@ class MainActivity : AppCompatActivity() {
 
             override fun onQueryTextChange(newText: String?): Boolean {
                 CoroutineScope(Dispatchers.IO).launch {
-                    val list = newText?.let { repository.getProductByName(it) }
+                    val list = newText?.let { repository.getProductByName(user?.token ?: "", it) }
                     runOnUiThread {
                         binding.apply {
                             adapter.submitList(list?.products)
