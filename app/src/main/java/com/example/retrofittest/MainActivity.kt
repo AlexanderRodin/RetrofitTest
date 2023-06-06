@@ -1,15 +1,14 @@
 package com.example.retrofittest
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.SearchView.OnQueryTextListener
+import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.retrofittest.adapter.ProductAdapter
 import com.example.retrofittest.databinding.ActivityMainBinding
 import com.example.retrofittest.retrofit.AuthRequest
 import com.example.retrofittest.retrofit.Repository
 import com.example.retrofittest.retrofit.User
-import com.squareup.picasso.Picasso
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -32,8 +31,7 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
 
-
-//        TODO RcView
+//           TODO RcView
         binding.rcView.layoutManager = LinearLayoutManager(this)
         binding.rcView.adapter = adapter
 
@@ -54,15 +52,6 @@ class MainActivity : AppCompatActivity() {
 
 
         var user: User? = null
-
-        CoroutineScope(Dispatchers.IO).launch {
-            user = repository.oAuth(
-                AuthRequest(
-                    "atuny0",
-                    "9uQFF1Lh"
-                )
-            )
-        }
 
 
         binding.sv.setOnQueryTextListener(object : OnQueryTextListener {
